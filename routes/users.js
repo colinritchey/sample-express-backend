@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const request = require('request');
+const rp = require('request-promise');
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
@@ -19,10 +20,13 @@ router.get('/', function(req, res, next) {
   let username = req.query.gitInfo.username;
   let data;
   console.log(username, "req query");
-  request({
+  rp({
     url: `https://api.github.com/users/${username}`,
     headers: {'User-Agent': 'sampleApp'}
-  }).pipe(res);
+  }).then(r => {
+    console.log(r, "here");
+    res.send(r);
+  });
 
 
 
