@@ -2,9 +2,17 @@ const express = require('express');
 const router = express.Router();
 const request = require('request');
 
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
+const headers = new Headers({
+    "User-Agent"   : "GH-User-Stats"
+});
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  // res.setHeader('Content-Type', 'application/json');
+  //  with request
+
+  res.setHeader('Content-Type', 'application/json');
   // console.log(res, "res");
   console.log(req.params.username, "req params");
 
@@ -12,13 +20,26 @@ router.get('/', function(req, res, next) {
   let data;
   console.log(username, "req query");
   request({
-    url: `https://api.github.com/users/${username}/repos`,
+    url: `https://api.github.com/users/${username}`,
     headers: {'User-Agent': 'sampleApp'}
   }).pipe(res);
 
-  // console.log(res, "res");
-  // console.log(data, "data");
-  // ;
+
+
+  /* With isomorphic-fetch */
+
+  // fetch('https://api.github.com/users/colinritchey', { headers })
+  //   .then(function(response) {
+  //     if (response.status >= 400) {
+  //       throw new Error("Bad response from server");
+  //     }
+  //     console.log(response.json());
+  //
+  //   })
+  //   .then(function(r) {
+  //     console.log(r.json());
+  //     res.send(r.json());
+  //   });
 
 });
 

@@ -3,9 +3,10 @@ import React from 'react';
 class Root extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {username: 'colinritchey'};
+    this.state = {username: 'colinritchey', avatar_url: ""};
 
     this.update = this.update.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount(){
@@ -13,8 +14,7 @@ class Root extends React.Component {
     $.ajax({
       url: 'api/users',
       data: { gitInfo: this.state }
-    }).then(res => console.log( this.setState({username: res.login}) ));
-    // debugger;
+    }).then(res => console.log( this.setState({username: res.login, avatar_url: res.avatar_url}) ));
 
   }
 
@@ -22,19 +22,20 @@ class Root extends React.Component {
     return e => this.setState({[field]: e.target.value});
   }
 
-  handleSubmit(){
-    console.log(this.state.user);
-
-    // $.ajax({
-    //   url: 'api/users'
-    // }).then(res => console.log( this.setState({user: res.login}) ));
+  handleSubmit(e){
+    e.preventDefault();
+    $.ajax({
+      url: 'api/users',
+      data: { gitInfo: this.state }
+    }).then(res => console.log( this.setState({username: res.login, avatar_url: res.avatar_url}) ));
   }
 
   render() {
     return (
       <div>
         <h1>Hello {this.state.username}</h1>
-        <form onSubmit={() => this.handleSubmit}>
+        <img src={this.state.avatar_url}></img>
+        <form onSubmit={this.handleSubmit}>
           <input
             type="text"
             value={this.state.username}
@@ -44,7 +45,6 @@ class Root extends React.Component {
 
           <input
             type="submit"
-
             >
 
           </input>
