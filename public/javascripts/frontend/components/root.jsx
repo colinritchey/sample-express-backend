@@ -3,10 +3,12 @@ import React from 'react';
 class Root extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {username: 'colinritchey', avatar_url: ""};
+    this.state = {username: 'colinritchey', avatar_url: "", firstRepoName: ""};
 
     this.update = this.update.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.getRepos = this.getRepos.bind(this);
+    this.getCommitsOfFirstRepo = this.getCommitsOfFirstRepo.bind(this);
   }
 
   componentDidMount(){
@@ -30,6 +32,22 @@ class Root extends React.Component {
     }).then(res => console.log( this.setState({username: res.login, avatar_url: res.avatar_url}) ));
   }
 
+  getRepos(e){
+    e.preventDefault();
+    $.ajax({
+      url: 'api/repos',
+      data: { gitInfo: this.state }
+    }).then(res => console.log( this.setState({ firstRepoName: res[0].name}) ));
+  }
+
+  getCommitsOfFirstRepo(e){
+    e.preventDefault();
+    $.ajax({
+      url: 'api/commits',
+      data: { gitInfo: this.state }
+    }).then(res => console.log( res ));
+  }
+
   render() {
     return (
       <div>
@@ -43,13 +61,14 @@ class Root extends React.Component {
             >
           </input>
 
-          <input
-            type="submit"
-            >
+          <input type="submit" >
 
           </input>
 
         </form>
+
+        <button onClick={this.getRepos}>Click here first</button>
+        <button onClick={this.getCommitsOfFirstRepo}>click here second</button>
       </div>
     );
   }
